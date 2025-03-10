@@ -1,0 +1,20 @@
+server:
+  max-http-request-header-size: 32KB  # Correct property for newer Spring Boot versions
+
+spring:
+  application:
+    name: gateway-service
+  lifecycle:
+    timeout-per-shutdown-phase: 15s
+  cloud:
+    gateway:
+      routes:
+        - id: authentication-service
+          uri: ${AUTHENTICATION_SERVICE_URL:http://primes-service:8080}/auth
+          predicates:
+            - Path=/auth/**
+
+        - id: primes-service
+          uri: ${PRIMES_SERVICE_URL:http://primes-service:8080}/primes
+          predicates:
+            - Path=/primes/**
